@@ -3,16 +3,12 @@ import helmet from 'helmet';
 import 'express-async-errors';
 import express, { Application, Request, Response, NextFunction } from 'express';
 
-import config from '@src/config';
-import routes from '@src/routes';
-import ValidationError from '@src/errors/ValidationError';
+import v1Routes from '@src/routes';
 import notFoundHandler from '@src/middleware/not-found';
 import errorHandler from '@src/middleware/error-handler';
 
 import { buildDevLogger } from '@src/middleware/logger/dev-logger';
 import { buildProdLogger } from '@src/middleware/logger/prod-logger';
-
-const { baseURL } = config;
 
 const logger =
   process.env.NODE_ENV === 'development'
@@ -29,7 +25,7 @@ const createServer = (): Application => {
 
   app.disable('x-powered-by');
 
-  app.use(`${baseURL}`, routes);
+  app.use('/gf/api/v1', v1Routes);
 
   app.use(notFoundHandler);
 

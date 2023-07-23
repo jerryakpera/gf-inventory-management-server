@@ -1,13 +1,23 @@
-import { createServer } from '@src/app';
+import './firebase';
 import config from '@src/config';
+import { connectDB } from './database';
+import { createServer } from '@src/app';
 
-const { port } = config;
+const { port, dbConnStr } = config;
 
 const startServer = async () => {
-  const app = await createServer();
-  app.listen(port, () => {
-    console.log(`Server live on port: ${port}`);
-  });
+  try {
+    if (dbConnStr) {
+      await connectDB(dbConnStr);
+    }
+
+    const app = await createServer();
+    app.listen(port, () => {
+      console.log(`GF Inventory System API is on port: ${port}`);
+    });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 startServer();
